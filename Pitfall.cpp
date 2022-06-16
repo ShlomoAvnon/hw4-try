@@ -8,9 +8,11 @@ Pitfall::Pitfall():
 {}
 
 void Pitfall::applyEncounter(Player &player) const {
-    if(player.m_type != "Rogue") {
+    bool isNotRogue = (player.getType() != "Rogue");
+    if(isNotRogue) {
         player.damage(m_stats.hpLossOnDefeat);
     }
+    printPitfallMessage(!isNotRogue);
 }
 
 

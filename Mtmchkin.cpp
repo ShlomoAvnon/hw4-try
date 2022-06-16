@@ -16,7 +16,11 @@
 #include "Wizard.h"
 #include "Rogue.h"
 #include "Fighter.h"
+#include "utilities.h"
 #include <fstream>
+#include "Exception.h"
+#include <memory>
+using namespace std;
 using std::ifstream;
 using std::ofstream;
 using std::cin;
@@ -39,37 +43,41 @@ const int FIGHTER = 2;
 const int MAX_CHARACTER = 15;
 const int NUM_OF_PLAYERS = 3;
 const char SPACE = ' ';
-const string CARDS_STR[8] = {"Goblin", "Vampire", "Dragon", "Treasure", "Pitfall", "Barfight", "Fairy"};
+const string CARDS_STR[8] = {"Goblin", "Vampire", "Dragon", "Merchant", "Treasure", "Pitfall", "Barfight", "Fairy"};
 const string PLAYERS_STR[3] = {"Rogue", "Wizard", "Fighter"};
 const int NOT_A_CARD = -1;
 const int MIN_PLAYERS = 2;
 const int MAX_PLAYERS = 6;
+const int NON_LOSERS_QUEUES = 2;
 
 int indexOfCard(string str);
 Card& intToCard(int i);
 Player& intToPlayer(int i, string str, string type);
 bool checkNumber(string str);
+void printBack(Queue<Player*> queue, int& i);
 
-static Queue<Card> m_cardsQueue;
-static Queue<Player> m_playersQueue;
-static Queue<Player> m_winnersPlayers;
-
-Mtmchkin::Mtmchkin() {
-    /*ifstream source(fileName);
+Mtmchkin::Mtmchkin(const std::string fileName) {
+    ifstream source(fileName);
     string cardType;
     if(source.fail()){
+        string a ="5";
+        throw DeckFileFormatError(a);
         cout<<"Error in opening file!"<<endl;
         ///TO DO: throw Exception while error in name file or in opening
     }
-    getline(source,cardType);
-    //creates a cards queue*/
-    string CARDS[8] = {"Goblin", "Vampire", "Dragon", "Merchant", "Treasure", "Pitfall", "Barfight", "Fairy"};
+    string str_numOfCards;
+    while(getline(source,cardType)){
+        for(int i=0; i<NUM_OF_CARDS; i++)
+            if(!CARDS_STR[i].compare(cardType))
+                m_cardsQueue.pushBack(&intToCard(i));
+        }
+    //creates a cards queue
 
 
     //string line;
-    for(int i=0; i<NUM_OF_CARDS; i++) {
+    /*for(int i=0; i<NUM_OF_CARDS; i++) {
         m_cardsQueue.pushBack(&intToCard(i));
-    }
+    }*/
 
     //gets the team size
 
@@ -77,39 +85,32 @@ Mtmchkin::Mtmchkin() {
     int numOfPlayers;
     printStartGameMessage();
     bool isValid;
-    /*do {
+    do {
         printEnterTeamSizeMessage();
         cin >> str_numOfPlayers;
         isValid = checkNumber(str_numOfPlayers);
         if (isValid){
             numOfPlayers = std::stoi(str_numOfPlayers);
         }
-        if (numOfPlayers < 2 || numOfPlayers > 6) {
+        if (numOfPlayers < MIN_PLAYERS || numOfPlayers > MAX_PLAYERS) {
             printInvalidTeamSize();
         }
-    } while (numOfPlayers < 2 || numOfPlayers > 6 || !isValid);*/
+    } while (numOfPlayers < MIN_PLAYERS || numOfPlayers > MAX_PLAYERS || !isValid);
 
     //check the validity of the name and the roll
     string name;
     string type;
-    numOfPlayers=2;
     for (int i = 0; i < numOfPlayers; ++i) {
         printInsertPlayerMessage();
         {
-            name= "shlomo";
-            type ="Rogue";
-            if (i=1) {
-                name= "Roi";
-                type ="Fighter";
-            }
-            /*if (name.length() >= MAX_CHARACTER) {
+            cin >> name;
+            cin >> type;
+            if (name.length() >= MAX_CHARACTER) {
                 i--;
                 printInvalidName();
             } else {
-                Player *player;*/
                 for (int p = 0; p < NUM_OF_PLAYERS; ++p) {
                     if (!(PLAYERS_STR[p].compare(type))) {
-                        //*player = intToPlayer(p, name, type);
                         m_playersQueue.pushBack(&(intToPlayer(p, name, type)));
                         break;
                     }
@@ -121,24 +122,24 @@ Mtmchkin::Mtmchkin() {
             }
         }
     }
-//}
+}
 
 
 Player& intToPlayer(int i, string name, string type)
 {
     switch (i) {
         case (ROGUE): {
-            Rogue *rogue = new Rogue(name, type);
+            unique_ptr<Rogue> rogue(new Rogue(name, type));
             return *rogue;
         }
         case (WIZARD): {
-            Wizard *wizard = new Wizard(name, type);
+            unique_ptr<Wizard> wizard(new Wizard(name, type));
             return *wizard;
         }
     }
     /// TO DO - what happening while the type of the card is non of them?
 
-    Fighter *fighter = new Fighter(name, type);
+    unique_ptr<Fighter> fighter(new Fighter(name, type));
     return *fighter;
 }
 
@@ -146,62 +147,53 @@ Card& intToCard(int i)
 {
     switch (i) {
         case (GOBLIN): {
-            Goblin *goblin = new Goblin();
+            unique_ptr<Goblin> goblin(new Goblin());
             return *goblin;
         }
         case (VAMPIRE): {
-            Vampire *vampire = new Vampire();
+            unique_ptr<Vampire> vampire(new Vampire());
             return *vampire;
         }
         case (DRAGON): {
-            Dragon *dragon = new Dragon();
+            unique_ptr<Dragon> dragon(new Dragon());
             return *dragon;
         }
         case (MERCHANT): {
-            Merchant *merchant = new Merchant();
+            unique_ptr<Merchant> merchant(new Merchant());
             return *merchant;
         }
         case (TREASURE): {
-            Treasure *treasure = new Treasure();
+            unique_ptr<Treasure> treasure(new Treasure());
             return *treasure;
         }
         case (PITFALL): {
-            Pitfall *pitfall = new Pitfall();
+            unique_ptr<Pitfall> pitfall(new Pitfall());
             return *pitfall;
         }
         case (BARFIGHT): {
-            Barfight *barfight = new Barfight();
+            unique_ptr<Barfight> barfight(new Barfight());
             return *barfight;
         }
     }
     /// TO DO - what happening while the type of the card is non of them?
 
-    Fairy *fairy = new Fairy();
+    unique_ptr<Fairy> fairy(new Fairy());
     return *fairy;
 }
 
 
-
-/*bool checkNumber1(string str)
-{
-    for (int i = 0; i < str.length(); i++)
-        if (isdigit(str[i]) == false)
-            return false;
-    return true;
-}*/
-
 void Mtmchkin::playRound()
 {
     int activePlayers = m_playersQueue.size();
+    printRoundStartMessage(m_roundCount);
     for(int j=0; j<activePlayers; j++)
     {
-        printRoundStartMessage(m_roundCount);
         /// TO DO: arrange the applyEncounter
+        printTurnStartMessage(m_playersQueue.front()->getName());
         Card* currentCard = m_cardsQueue.front();
         currentCard->applyEncounter(*m_playersQueue.front());
         m_cardsQueue.popFront();
         m_cardsQueue.pushBack(currentCard);
-
         // checking if player win
         if (m_playersQueue.front()->getLevel()==MAX_LEVEL)
         {
@@ -222,7 +214,7 @@ void Mtmchkin::playRound()
         if(!isGameOver())
             printGameEndMessage();
     }
-
+    printLeaderBoard();
     m_roundCount++;
 }
 
@@ -234,7 +226,59 @@ bool Mtmchkin::isGameOver() const {
     return (m_winnersPlayers.size()+ m_losersPlayers.size()==m_numOfPlayers);
 }
 
-//Mtmchkin::~Mtmchkin() {
-    /// TO DO: understand how to delete all the memory!
+Mtmchkin::~Mtmchkin() {
+    while(!m_losersPlayers.isEmpty())
+    {
+        delete m_losersPlayers.front();
+        m_losersPlayers.popFront();
+    }
+    while(!m_cardsQueue.isEmpty())
+    {
+        delete m_cardsQueue.front();
+        m_cardsQueue.popFront();
+    }
+    while(!m_winnersPlayers.isEmpty())
+    {
+        delete m_winnersPlayers.front();
+        m_winnersPlayers.popFront();
+    }
+    while(!m_winnersPlayers.isEmpty())
+    {
+        delete m_winnersPlayers.front();
+        m_winnersPlayers.popFront();
+    }
+    while (!m_playersQueue.isEmpty())
+    {
+        delete m_playersQueue.front();
+        m_playersQueue.popFront();
+    }
+}
 
-//}
+void Mtmchkin::printLeaderBoard() const {
+    printLeaderBoardStartMessage();
+    int i=1;
+    //bool changeQueue = true;
+    Queue<Player*> tmpQueue = m_winnersPlayers;
+    for(int j = 0; j<NON_LOSERS_QUEUES; j++){
+        while(!tmpQueue.isEmpty()){
+            printPlayerLeaderBoard(i, *tmpQueue.front());
+            tmpQueue.popFront();
+            i++;
+        }
+        tmpQueue = m_playersQueue;
+    }
+    tmpQueue = m_losersPlayers;
+    printBack(tmpQueue, i);
+
+}
+
+void printBack(Queue<Player*> queue, int& i)
+{
+    if(queue.isEmpty())
+        return;
+    Player* player = queue.front();
+    queue.popFront();
+    printBack(queue, i);
+    printPlayerLeaderBoard(i, *player);
+    i++;
+}

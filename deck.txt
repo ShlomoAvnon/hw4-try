@@ -1,6 +1,8 @@
-Dragon
+Merchant
 Pitfall
+Merchant
 Barfight
 Fairy
 Goblin
 Vampire
+Treasure

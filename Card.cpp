@@ -6,10 +6,11 @@
 
 
 Card::Card(CardType type, const CardStats stats, std::string name):
+    m_name(name),
     m_effect(type),
-    m_stats(stats),
-    m_name(name)
+    m_stats(stats)
 {}
+
 
 ostream &operator<<(ostream &os, const Card &card) {
     card.print(os);

@@ -19,10 +19,10 @@ void Dragon::applyEncounter(Player &player) const {
     if(player.getAttackStrength() >= m_stats.force) {
         player.levelUp();
         player.addCoins(m_stats.loot);
-        printWinBattle(player.m_name ,this->m_name);
+        printWinBattle(player.getName() ,this->m_name);
     }
     else {
         player.damage(m_stats.hpLossOnDefeat);
-        printLossBattle(player.m_name, this->m_name);
+        printLossBattle(player.getName(), this->m_name);
     }
 }

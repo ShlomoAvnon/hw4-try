@@ -17,12 +17,12 @@ public:
     * @return
     *      A new instance of Mtmchkin.
     */
-    Mtmchkin();
+    Mtmchkin(const std::string fileName);
     
 
     Mtmchkin(const Mtmchkin&) = delete;
     Mtmchkin& operator=(const Mtmchkin& other) = delete;
-    ~Mtmchkin() = default;
+    ~Mtmchkin();
 
     /*
     * Play the next Round of the game - according to the instruction in the exercise document.

@@ -21,7 +21,7 @@ const int PRICE_HP = 5;
 const int PRICE_BUFF = 10;
 const int MERCHANT_HEAL = 1;
 const int MERCHANT_BUFF = 1;
-
+const int NOT_ENOUGH_MONEY = 0;
 
 
 
@@ -33,39 +33,49 @@ void Merchant::applyEncounter(Player &player) const {
     string strChoice;
     int numChoice;
     printStartGameMessage();
-    bool isValid;
-    /// To Do - it this the way to work with cout?
-    printMerchantInitialMessageForInteractiveEncounter(cout ,player.m_name, player.get_money());
+    bool isValid = false;
+    printMerchantInitialMessageForInteractiveEncounter(cout, player.getName(), player.get_money());
+    while (!isValid) {
         cin >> strChoice;
         isValid = checkNumber(strChoice);
-        if (isValid){
-            numChoice = std::stoi(strChoice);
-            switch (numChoice) {
-                case BUY_NOTHING:
-                    printMerchantSummary(cout, player.m_name, BUY_NOTHING, BUY_NOTHING);
-                    break;
-                case BUY_HP:
-                    if(player.pay(PRICE_HP)) {
-                        player.heal(MERCHANT_HEAL);
-                        printMerchantSummary(cout, player.m_name, BUY_HP, PRICE_HP);
-
-                    }
-                    else{
-                        printMerchantInsufficientCoins(cout);
-                    }
-                    break;
-                case PRICE_BUFF:
-                    if (player.pay(PRICE_BUFF)){
-                        player.buff(MERCHANT_BUFF);
-                        printMerchantSummary(cout, player.m_name, BUY_BUFF, PRICE_BUFF);
-                    }
-                    else{
-                        printMerchantInsufficientCoins(cout);
-                    }
-                    break;
-            }
+        if (!isValid) {
+            printInvalidInput();
         }
+    }
+    if (isValid) {
+        numChoice = std::stoi(strChoice);
+        int price;
+        switch (numChoice) {
+            case BUY_NOTHING:
+                price = BUY_NOTHING;
+                break;
+            case BUY_HP:
+                if (player.pay(PRICE_HP)) {
+                    player.heal(MERCHANT_HEAL);
+                    price = PRICE_HP;
+                }
+                else {
+                    printMerchantInsufficientCoins(cout);
+                    price = NOT_ENOUGH_MONEY;
+                    numChoice=NOT_ENOUGH_MONEY;
+                }
+                break;
+            case BUY_BUFF:
+                if (player.pay(PRICE_BUFF)) {
+                    player.buff(MERCHANT_BUFF);
+                    price = PRICE_BUFF;
+                }
+                else {
+                    printMerchantInsufficientCoins(cout);
+                    price = NOT_ENOUGH_MONEY;
+                    numChoice=NOT_ENOUGH_MONEY;
+                }
+                break;
+        }
+        printMerchantSummary(cout, player.getName(), numChoice, price);
+    }
 }
+
 
 
 void Merchant::print(ostream &os) const

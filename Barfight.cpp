@@ -9,9 +9,11 @@ Barfight::Barfight():
 {}
 
 void Barfight::applyEncounter(Player &player) const {
-    if(player.m_type != "Fighter") {
+    bool isNotFighter = (player.getType() != "Fighter");
+    if(isNotFighter) {
         player.damage(m_stats.hpLossOnDefeat);
     }
+    printBarfightMessage(!isNotFighter);
 }
 
 

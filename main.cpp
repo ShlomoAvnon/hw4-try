@@ -4,7 +4,10 @@
 #include "Mtmchkin.h"
 int main(){
 
-    Mtmchkin game;
-    for(int i=0; i<10; i++)
-        game.playRound();
+    Mtmchkin game("C:\\Users\\shlom\\Desktop\\hw1_project2\\deck.txt");
+
+        while(game.isGameOver()) {
+            game.playRound();
+
+        }
 }

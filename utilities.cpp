@@ -51,7 +51,7 @@ void printCardDetails(ostream &os, const string &name)
 void printEndOfCardDetails(ostream &os)
 {
     os << "-------------------------------" << std::endl;
-}  
+}
 
 void printMerchantInitialMessageForInteractiveEncounter(ostream &os, const string &playerName, int coins)
 {
@@ -72,7 +72,7 @@ void printMonsterDetails(ostream &os, int force, int damage, int coins, bool isD
     os << "Force: " << force << endl;
     if (isDragon)
         os << "Damage upon loss: " << "Infinite" << endl;
-    else        
+    else
         os << "Damage upon loss: " << damage << endl;
     os << "Coins: " << coins << endl;
 }
@@ -180,7 +180,7 @@ void printRoundStartMessage(int roundCount)
 
 void printWinBattle(const string &playerName, const string &monsterName)
 {
-    cout << "Player " << playerName << " has won" << monsterName << " and rose 1 Level!" << endl;
+    cout << "Player " << playerName << " has defeated " << monsterName << " and rose 1 Level!" << endl;
 }
 
 void printLossBattle(const string &playerName, const string &monsterName)
@@ -188,9 +188,16 @@ void printLossBattle(const string &playerName, const string &monsterName)
     cout << "Player " << playerName << " has been defeated by a " << monsterName << "." << endl;
 }
 
+void printLeaderBoardStartMessage()
+{
+    cout << endl << "The current ranking of the Team:" << endl;
+    cout << "Ranking    Player Name     Level     Force HP    Coins Job" << endl;
+}
 
-
-
+void printPlayerLeaderBoard(int ranking, const Player& player)
+{
+    cout << ranking << "          " << player << endl;
+}
 
 void printGameEndMessage()
 {

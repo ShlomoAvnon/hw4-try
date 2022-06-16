@@ -20,7 +20,7 @@ add_executable(hw1_project2
         Goblin.h
         HealthPoints.cpp
         HealthPoints.h
-        main.cpp
+        test.cpp
         Merchant.cpp
         Merchant.h
         Mtmchkin.cpp

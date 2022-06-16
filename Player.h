@@ -6,7 +6,6 @@
 
 #include <string>
 #include "HealthPoints.h"
-#include "utilities.h"
 using std::string;
 
 const int MAX_HP = 100;
@@ -139,15 +138,19 @@ public:
     */
     virtual int getAttackStrength() const;
 
-    const std::string m_name;
-    const std::string m_type;
+    string getType();
+    string getName();
 
 protected:
-    int m_coins;
+    const std::string m_name;
+    const std::string m_type;
     int m_maxHP;
     int m_hp;
-    int m_level;
     int m_force;
+    int m_level;
+    int m_coins;
+
+    friend ostream & operator<<(ostream& os, const Player& player);
 
 private:
 

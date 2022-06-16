@@ -9,6 +9,7 @@ Treasure::Treasure():
 
 void Treasure::applyEncounter(Player &player) const {
     player.addCoins(m_stats.loot);
+    printTreasureMessage();
 }
 
 

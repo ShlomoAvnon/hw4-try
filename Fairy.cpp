@@ -9,10 +9,13 @@ Fairy::Fairy():
 {}
 
 void Fairy::applyEncounter(Player &player) const {
-    if(player.m_type == "Wizard") {
+    bool isWizard = (player.getType() == "Wizard");
+    if(isWizard) {
         player.heal(m_stats.heal);
     }
+    printFairyMessage(isWizard);
 }
+
 
 
 void Fairy::print(ostream &os) const

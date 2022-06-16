@@ -108,6 +108,7 @@ protected:
     CardStats m_stats;
 private:
 
+
 };
 
 

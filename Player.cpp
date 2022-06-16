@@ -2,6 +2,8 @@
 // Created by teich on 04/05/2022.
 //
 #include "Player.h"
+#include "utilities.h"
+
 
 Player::Player(const string name, const string type, int hp, int force):
     m_name(name),
@@ -35,7 +37,12 @@ int Player::getLevel() const
 void Player::buff(int n)
 {
     // work also when get number smaller than Zero, for the Vampire
-    m_force+=n;
+    if (m_force + n < 0) {
+        m_force = 0;
+    }
+    else {
+            m_force+=n;
+        }
 }
 
 void Player::heal(int n)
@@ -48,6 +55,7 @@ void Player::heal(int n)
         }
     }
 }
+
 
 void Player::damage(int n)
 {
@@ -91,4 +99,17 @@ int Player::get_money() {
 int Player::getAttackStrength() const
 {
     return m_level + m_force;
+}
+
+ostream &operator<<(ostream &os, const Player &player) {
+    printPlayerDetails(os, player.m_name, player.m_type, player.m_level, player.m_force, player.m_hp, player.m_coins);
+    return os;
+}
+
+string Player::getType() {
+    return m_type;
+}
+
+string Player::getName() {
+    return m_name;
 }
