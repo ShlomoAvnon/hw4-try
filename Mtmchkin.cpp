@@ -109,6 +109,7 @@ Mtmchkin::Mtmchkin(const std::string fileName) {
                 i--;
                 printInvalidName();
             } else {
+
                 for (int p = 0; p < NUM_OF_PLAYERS; ++p) {
                     if (!(PLAYERS_STR[p].compare(type))) {
                         m_playersQueue.pushBack(&(intToPlayer(p, name, type)));
